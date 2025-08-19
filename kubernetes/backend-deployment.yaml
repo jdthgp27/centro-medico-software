@@ -1,0 +1,49 @@
+# kubernetes/backend-deployment.yml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  labels:
+    app: medical-center
+    tier: backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: medical-center
+      tier: backend
+  template:
+    metadata:
+      labels:
+        app: medical-center
+        tier: backend
+    spec:
+      containers:
+      - name: backend
+        image: centromedico/backend:1.0.0
+        ports:
+        - containerPort: 8080
+        envFrom:
+        - configMapRef:
+            name: backend-config
+        - secretRef:
+            name: backend-secrets
+        resources:
+          limits:
+            cpu: "1"
+            memory: "1Gi"
+          requests:
+            cpu: "500m"
+            memory: "512Mi"
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 45
+          periodSeconds: 15
