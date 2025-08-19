@@ -1,0 +1,104 @@
+version: '3.8'
+
+services:
+  # Base de datos PostgreSQL
+  postgres:
+    image: postgres:14-alpine
+    container_name: medical-center-db
+    environment:
+      POSTGRES_DB: medical_center
+      POSTGRES_USER: medical_user
+      POSTGRES_PASSWORD: securepassword123
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U medical_user -d medical_center"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - medical-network
+
+  # Backend Spring Boot
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: medical-center-backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: medical_center
+      DB_USER: medical_user
+      DB_PASSWORD: securepassword123
+      JWT_SECRET: dev-secret-change-for-production
+      ENCRYPTION_KEY: dev-encryption-key-32chars-1234567890
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend:/app
+      - ~/.m2:/root/.m2
+    networks:
+      - medical-network
+    restart: unless-stopped
+
+  # Frontend React
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: medical-center-frontend
+    depends_on:
+      - backend
+    environment:
+      VITE_API_URL: http://localhost:8080
+      VITE_ENABLE_DEBUG: "true"
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    networks:
+      - medical-network
+    restart: unless-stopped
+
+  # Redis para caching (opcional)
+  redis:
+    image: redis:7-alpine
+    container_name: medical-center-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - medical-network
+
+  # PGAdmin para gestión de base de datos (opcional)
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: medical-center-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@centromedico.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - medical-network
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+
+networks:
+  medical-network:
+    driver: bridge

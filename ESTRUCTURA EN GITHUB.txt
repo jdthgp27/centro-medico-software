@@ -1,0 +1,57 @@
+centro-medico-software/
+├── backend/                  # Código del servidor (Spring Boot)
+│   ├── src/
+│   │   ├── main/
+│   │   │   ├── java/com/centromedico/
+│   │   │   │   ├── application/       # Casos de uso
+│   │   │   │   ├── domain/            # Lógica de negocio
+│   │   │   │   ├── infrastructure/    # Bases de datos, APIs externas
+│   │   │   │   ├── interfaces/        # Controladores, DTOs
+│   │   │   │   └── CoreApplication.java
+│   │   │   └── resources/
+│   │   │       ├── db/migration/      # Flyway (SQL migrations)
+│   │   │       ├── application.yml    # Config principal
+│   │   │       └── application-security.yml
+│   │   └── test/                      # Pruebas unitarias/integración
+│   ├── Dockerfile
+│   └── pom.xml
+│
+├── frontend/                 # Aplicación React (TypeScript)
+│   ├── public/               # Assets estáticos
+│   ├── src/
+│   │   ├── components/       # Componentes reutilizables
+│   │   ├── pages/            # Vistas principales
+│   │   ├── services/         # Conexión al backend
+│   │   ├── styles/           # Tailwind/CSS
+│   │   ├── utils/            # Funciones auxiliares
+│   │   ├── App.tsx
+│   │   └── main.tsx
+│   ├── Dockerfile
+│   ├── package.json
+│   └── tsconfig.json
+│
+├── database/                 # Scripts SQL y configuración
+│   ├── init/                 # Inicialización de la BD
+│   ├── migrations/           # Migraciones manuales (si no se usa Flyway)
+│   └── backup-scripts/       # Scripts de respaldo automático
+│
+├── kubernetes/               # Configuración para despliegue en K8s
+│   ├── backend-deployment.yml
+│   ├── frontend-deployment.yml
+│   ├── postgres-statefulset.yml
+│   └── ingress.yml
+│
+├── docs/                     # Documentación
+│   ├── INSTALLATION.md       # Guía de instalación
+│   ├── USER_MANUAL.md        # Manual de usuario
+│   ├── API_DOCS.md           # Documentación de la API
+│   └── SECURITY.md           # Políticas de seguridad
+│
+├── .github/                  # Configuración CI/CD
+│   ├── workflows/
+│   │   ├── backend-ci.yml
+│   │   └── frontend-ci.yml
+│   └── ISSUE_TEMPLATE.md
+│
+├── docker-compose.yml        # Entorno de desarrollo local
+└── README.md                 # Descripción del proyecto
