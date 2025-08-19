@@ -1,0 +1,62 @@
+Endpoints Principales
+Pacientes
+Método	Endpoint	Descripción
+GET	/api/patients	Listar pacientes (paginated)
+POST	/api/patients	Crear nuevo paciente
+GET	/api/patients/{id}	Obtener detalles de paciente
+PUT	/api/patients/{id}	Actualizar paciente
+Expedientes Médicos
+http
+GET /api/medical-records?patientId={id}
+Headers:
+  Authorization: Bearer {token}
+Ejemplo Response:
+
+json
+{
+  "records": [
+    {
+      "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      "date": "2023-10-15T14:30:00Z",
+      "doctor": "Dr. García",
+      "diagnosis": "Hipertensión arterial",
+      "treatment": "Amlodipino 5mg 1x día",
+      "attachments": [
+        {
+          "type": "LAB_RESULT",
+          "url": "/api/attachments/1"
+        }
+      ]
+    }
+  ]
+}
+Citas
+http
+POST /api/appointments
+Headers:
+  Authorization: Bearer {token}
+Content-Type: application/json
+
+{
+  "patientId": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "doctorId": "3fa85f64-5717-4562-b3fc-2c963f66afa7",
+  "date": "2023-11-20T09:00:00Z",
+  "reason": "Control anual"
+}
+Códigos de Estado
+Código	Significado
+200	OK - Solicitud exitosa
+201	Creado - Recurso creado
+400	Bad Request - Datos inválidos
+401	No autorizado
+403	Prohibido - Sin permisos
+404	No encontrado
+500	Error interno del servidor
+Rate Limiting
+Máximo 100 requests por minuto por IP
+
+Headers de respuesta:
+
+X-RateLimit-Limit: Límite total
+
+X-RateLimit-Remaining: Solicitudes restantes

@@ -1,0 +1,24 @@
+Configuración Adicional Recomendada:
+Para producción, sobrescribe estos valores mediante variables de entorno:
+
+bash (terminal git)
+export JWT_SECRET=TuSuperSecretoSeguroDe64BytesParaJWT
+export ENCRYPTION_KEY=TuClaveDeEncriptacionDe32BytesParaAES256
+Estructura de permisos:
+
+Los permisos están organizados por roles (ADMIN, DOCTOR, STAFF, PATIENT)
+
+Cada permiso sigue el formato recurso:acción
+
+Protección contra ataques:
+
+Configuración CORS estricta
+
+Headers de seguridad HTTP
+
+Rate limiting para prevenir brute force
+
+Encriptación AES-256 para datos sensibles
+
+Integración con Spring Security:
+Este archivo se complementa con la configuración Java de seguridad que ya tienes en tu proyecto.
