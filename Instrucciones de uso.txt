@@ -1,0 +1,56 @@
+Instrucciones de Uso
+Iniciar los servicios:
+
+bash (terminal git)
+docker-compose up -d
+Ver logs en tiempo real:
+
+bash (terminal git)
+docker-compose logs -f
+Detener los servicios:
+
+bash (terminal git)
+docker-compose down
+Reconstruir imágenes:
+
+bash (terminal git)
+docker-compose up -d --build
+Servicios Disponibles
+Servicio	URL Local	Credenciales
+Backend	http://localhost:8080	-
+Frontend	http://localhost:3000	-
+PostgreSQL	localhost:5432	User: medical_user
+Pass: securepassword123
+PGAdmin	http://localhost:5050	Email: admin@centromedico.com
+Pass: admin123
+Redis	localhost:6379	-
+Configuraciones Recomendadas
+Variables de Entorno:
+
+Crear un archivo .env en la raíz del proyecto:
+
+env
+# PostgreSQL
+POSTGRES_PASSWORD=securepassword123
+POSTGRES_USER=medical_user
+POSTGRES_DB=medical_center
+
+# Backend
+JWT_SECRET=your-secret-key-32-chars
+ENCRYPTION_KEY=your-encryption-key-32-chars
+
+# Frontend
+VITE_API_URL=http://localhost:8080
+Hot Reload para Desarrollo:
+
+Backend: Montar volumen con código fuente y dependencias Maven
+
+Frontend: Montar volumen con código fuente excluyendo node_modules
+
+Configuración para Debugging:
+
+Backend: Agregar estos parámetros al ENTRYPOINT:
+
+dockerfile
+ENTRYPOINT ["java", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005", "-jar", "app.jar"]
+Exponer puerto 5005 en el compose para conectar debugger
